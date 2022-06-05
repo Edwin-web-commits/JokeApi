@@ -1,6 +1,10 @@
+using JokeApi.Configurations;
 using JokeApi.Data;
+using JokeApi.IRepository;
+using JokeApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +29,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
+
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IJokesRepository,JokesRepository>();
 
 var app = builder.Build();
 

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using JokeApi.Data;
+using JokeApi.Models.Joke;
+using AutoMapper;
+using JokeApi.IRepository;
 
 namespace JokeApi.Controllers
 {
@@ -13,53 +16,67 @@ namespace JokeApi.Controllers
     [ApiController]
     public class JokesController : ControllerBase
     {
-        private readonly JokeApiDbContext _context;
+        
+        private readonly IMapper _mapper;
+        private readonly IJokesRepository _jokesRepository;
 
-        public JokesController(JokeApiDbContext context)
+        public JokesController( IMapper mapper, IJokesRepository jokesRepository)
         {
-            _context = context;
+           
+            this._mapper = mapper;
+            this._jokesRepository = jokesRepository;
         }
 
         // GET: api/Jokes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Joke>>> GetJoke()
+        public async Task<ActionResult<IEnumerable<GetJokeDto>>> GetJoke()
         {
-            return await _context.Joke.ToListAsync();
+            var jokes = await _jokesRepository.GetAllAsync();
+            var records =_mapper.Map<List<GetJokeDto>>(jokes);
+            return Ok(records);
         }
 
         // GET: api/Jokes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Joke>> GetJoke(int id)
+        public async Task<ActionResult<JokeDto>> GetJoke(int id)
         {
-            var joke = await _context.Joke.FindAsync(id);
+            var joke = await _jokesRepository.GetDetails(id);
 
             if (joke == null)
             {
                 return NotFound();
             }
-
-            return joke;
+            var jokeDto = _mapper.Map<JokeDto>(joke);
+            return Ok(jokeDto);
         }
 
         // PUT: api/Jokes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJoke(int id, Joke joke)
+        public async Task<IActionResult> PutJoke(int id, UpdateJokeDto updateJokeDto)
         {
-            if (id != joke.Id)
+            if (id != updateJokeDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(joke).State = EntityState.Modified;
+            //  _context.Entry(joke).State = EntityState.Modified;
+            var joke = await _jokesRepository.GetAsync(id);
+
+            if(joke == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(updateJokeDto,joke);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _jokesRepository.UpdateAsync(joke);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!JokeExists(id))
+                if (!await JokeExists(id))
                 {
                     return NotFound();
                 }
@@ -75,10 +92,10 @@ namespace JokeApi.Controllers
         // POST: api/Jokes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Joke>> PostJoke(Joke joke)
+        public async Task<ActionResult<Joke>> PostJoke(CreateJokeDto createJoke)
         {
-            _context.Joke.Add(joke);
-            await _context.SaveChangesAsync();
+            var joke = _mapper.Map<Joke>(createJoke);
+            await _jokesRepository.AddAsync(joke);
 
             return CreatedAtAction("GetJoke", new { id = joke.Id }, joke);
         }
@@ -87,21 +104,19 @@ namespace JokeApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteJoke(int id)
         {
-            var joke = await _context.Joke.FindAsync(id);
+            var joke = await _jokesRepository.GetAsync(id);
             if (joke == null)
             {
                 return NotFound();
             }
-
-            _context.Joke.Remove(joke);
-            await _context.SaveChangesAsync();
+            await _jokesRepository.DeleteAsync(id);
 
             return NoContent();
         }
 
-        private bool JokeExists(int id)
+        private async Task<bool> JokeExists(int id)
         {
-            return _context.Joke.Any(e => e.Id == id);
+            return await _jokesRepository.Exists(id);
         }
     }
 }
