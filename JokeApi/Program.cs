@@ -34,6 +34,7 @@ builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IJokesRepository,JokesRepository>();
+builder.Services.AddScoped<ICommentsRepository,CommentsRepository>();
 
 var app = builder.Build();
 

@@ -47,9 +47,14 @@ namespace JokeApi.Repository
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public Task<T> GetAsync(int id)
+        public async Task<T> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                return null;
+            }
+
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task UpdateAsync(T entity)

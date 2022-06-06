@@ -92,7 +92,7 @@ namespace JokeApi.Controllers
         // POST: api/Jokes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Joke>> PostJoke(CreateJokeDto createJoke)
+        public async Task<ActionResult<JokeDto>> PostJoke(CreateJokeDto createJoke)
         {
             var joke = _mapper.Map<Joke>(createJoke);
             await _jokesRepository.AddAsync(joke);

@@ -16,6 +16,9 @@ namespace JokeApi.Configurations
 
 
             CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<Comment, CreateCommentDto>().ReverseMap();
+            CreateMap<Comment, UpdateCommentDto>().ReverseMap();
+
 
         }
     }
