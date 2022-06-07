@@ -9,12 +9,13 @@ using JokeApi.Data;
 using JokeApi.IRepository;
 using AutoMapper;
 using JokeApi.Models.Comment;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JokeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentsController : ControllerBase
+    public class CommentsController : BaseController
     {
         
         private readonly ICommentsRepository _commentsRepository;
@@ -52,6 +53,7 @@ namespace JokeApi.Controllers
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutComment(int id, UpdateCommentDto updateCommentDto)
         {
             if (id != updateCommentDto.Id)
@@ -89,9 +91,13 @@ namespace JokeApi.Controllers
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<CommentDto>> PostComment(CreateCommentDto commentDto)
         {
             var comment = _mapper.Map<Comment>(commentDto);
+            var userId = GetUserId();
+            comment.UserId = userId;
+
             await _commentsRepository.AddAsync(comment);
 
             return CreatedAtAction("GetComment", new { id = comment.Id }, commentDto);
@@ -99,6 +105,7 @@ namespace JokeApi.Controllers
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _commentsRepository.GetAsync(id);

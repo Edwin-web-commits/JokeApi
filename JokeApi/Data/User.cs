@@ -1,8 +1,10 @@
-﻿namespace JokeApi.Data
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace JokeApi.Data
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-        public string username { get; set; }
+        //public int Id { get; set; }
+        //public string username { get; set; }
     }
 }

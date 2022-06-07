@@ -4,6 +4,7 @@ using JokeApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JokeApi.Migrations
 {
     [DbContext(typeof(JokeApiDbContext))]
-    partial class JokeApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220606185745_FirstMigration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,22 +190,6 @@ namespace JokeApi.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a55073d0-1118-4c7e-8a3d-f17e84de9b54",
-                            ConcurrencyStamp = "c897a49e-94db-48bd-90d7-94c16bdc3f2c",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "b6056bc7-b986-47b9-b4a3-d3203f4cd785",
-                            ConcurrencyStamp = "faeb00e3-a3b4-4cb1-963b-f569a485790c",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

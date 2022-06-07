@@ -9,12 +9,13 @@ using JokeApi.Data;
 using JokeApi.Models.Joke;
 using AutoMapper;
 using JokeApi.IRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JokeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class JokesController : ControllerBase
+    public class JokesController : BaseController
     {
         
         private readonly IMapper _mapper;
@@ -29,6 +30,7 @@ namespace JokeApi.Controllers
 
         // GET: api/Jokes
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<GetJokeDto>>> GetJoke()
         {
             var jokes = await _jokesRepository.GetAllAsync();
@@ -52,7 +54,9 @@ namespace JokeApi.Controllers
 
         // PUT: api/Jokes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutJoke(int id, UpdateJokeDto updateJokeDto)
         {
             if (id != updateJokeDto.Id)
@@ -92,16 +96,23 @@ namespace JokeApi.Controllers
         // POST: api/Jokes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
+        
         public async Task<ActionResult<JokeDto>> PostJoke(CreateJokeDto createJoke)
         {
             var joke = _mapper.Map<Joke>(createJoke);
+
+            var userId = GetUserId();
+             joke.UserId = userId;
+
             await _jokesRepository.AddAsync(joke);
 
-            return CreatedAtAction("GetJoke", new { id = joke.Id }, joke);
+            return CreatedAtAction("GetJoke", new { id = joke.Id }, createJoke);
         }
 
         // DELETE: api/Jokes/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteJoke(int id)
         {
             var joke = await _jokesRepository.GetAsync(id);

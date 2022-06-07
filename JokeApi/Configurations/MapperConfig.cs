@@ -2,6 +2,7 @@
 using JokeApi.Data;
 using JokeApi.Models.Comment;
 using JokeApi.Models.Joke;
+using JokeApi.Models.Users;
 
 namespace JokeApi.Configurations
 {
@@ -18,7 +19,7 @@ namespace JokeApi.Configurations
             CreateMap<Comment, CommentDto>().ReverseMap();
             CreateMap<Comment, CreateCommentDto>().ReverseMap();
             CreateMap<Comment, UpdateCommentDto>().ReverseMap();
-
+            CreateMap<User, UserDto>().ReverseMap();
 
         }
     }
