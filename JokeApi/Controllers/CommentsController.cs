@@ -15,6 +15,7 @@ namespace JokeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CommentsController : BaseController
     {
         
@@ -53,7 +54,7 @@ namespace JokeApi.Controllers
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Authorize]
+        
         public async Task<IActionResult> PutComment(int id, UpdateCommentDto updateCommentDto)
         {
             if (id != updateCommentDto.Id)
@@ -91,7 +92,7 @@ namespace JokeApi.Controllers
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize]
+        
         public async Task<ActionResult<CommentDto>> PostComment(CreateCommentDto commentDto)
         {
             var comment = _mapper.Map<Comment>(commentDto);
@@ -105,7 +106,7 @@ namespace JokeApi.Controllers
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        [Authorize]
+        
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _commentsRepository.GetAsync(id);

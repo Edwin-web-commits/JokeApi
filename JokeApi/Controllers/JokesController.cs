@@ -15,6 +15,7 @@ namespace JokeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JokesController : BaseController
     {
         
@@ -96,7 +97,7 @@ namespace JokeApi.Controllers
         // POST: api/Jokes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize]
+        
         
         public async Task<ActionResult<JokeDto>> PostJoke(CreateJokeDto createJoke)
         {
@@ -112,7 +113,7 @@ namespace JokeApi.Controllers
 
         // DELETE: api/Jokes/5
         [HttpDelete("{id}")]
-        [Authorize]
+        
         public async Task<IActionResult> DeleteJoke(int id)
         {
             var joke = await _jokesRepository.GetAsync(id);
