@@ -15,7 +15,7 @@ namespace JokeApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
     public class JokesController : BaseController
     {
         

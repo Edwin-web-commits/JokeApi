@@ -1,6 +1,6 @@
 ﻿using JokeApi.IRepository;
 using JokeApi.Models.Users;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace JokeApi.Controllers

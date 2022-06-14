@@ -5,7 +5,7 @@ using JokeApi.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+
 using System.Security.Claims;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace JokeApi.Repository
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
-        private User _user;
+      
         public AuthManager(IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
         {
             this._mapper = mapper;
@@ -74,18 +74,9 @@ namespace JokeApi.Repository
 
             var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x)).ToList(); //generate the list of claims for the roles of the user
 
-            ////generate the list of claims for the Id of the user
-            //var userIdClaims = new List<Claim>
-            //{
-            //   new Claim(ClaimTypes.Name, _user.Id )
-            //};
+            
 
              var userClaims = await _userManager.GetClaimsAsync(user);
-
-            //foreach (var role in roles )
-            //{
-            //    userIdClaims.Add(new Claim(ClaimTypes.Role, role));
-            //}
 
 
             var claims = new List<Claim>

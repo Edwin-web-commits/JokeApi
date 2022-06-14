@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/jokeapidbserver/databases/JokeApi_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:JokeApiDbConnectionString",
+      "dynamicId": null
+    }
+  }
+}
